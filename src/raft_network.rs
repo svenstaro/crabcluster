@@ -1,24 +1,15 @@
 use async_trait::async_trait;
-use openraft::error::AppendEntriesError;
-use openraft::error::InstallSnapshotError;
-use openraft::error::NetworkError;
-use openraft::error::RPCError;
-use openraft::error::RemoteError;
-use openraft::error::VoteError;
-use openraft::raft::AppendEntriesRequest;
-use openraft::raft::AppendEntriesResponse;
-use openraft::raft::InstallSnapshotRequest;
-use openraft::raft::InstallSnapshotResponse;
-use openraft::raft::VoteRequest;
-use openraft::raft::VoteResponse;
-use openraft::BasicNode;
-use openraft::RaftNetwork;
-use openraft::RaftNetworkFactory;
-use serde::de::DeserializeOwned;
-use serde::Serialize;
+use openraft::error::{
+    AppendEntriesError, InstallSnapshotError, NetworkError, RPCError, RemoteError, VoteError,
+};
+use openraft::raft::{
+    AppendEntriesRequest, AppendEntriesResponse, InstallSnapshotRequest, InstallSnapshotResponse,
+    VoteRequest, VoteResponse,
+};
+use openraft::{BasicNode, RaftNetwork, RaftNetworkFactory};
+use serde::{de::DeserializeOwned, Serialize};
 
-use crate::node::ExampleNodeId;
-use crate::node::ExampleTypeConfig;
+use crate::node::{ExampleNodeId, ExampleTypeConfig};
 
 pub struct ExampleNetwork {}
 

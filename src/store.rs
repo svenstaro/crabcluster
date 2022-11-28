@@ -6,29 +6,16 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use openraft::async_trait::async_trait;
-use openraft::storage::LogState;
-use openraft::storage::Snapshot;
-use openraft::AnyError;
-use openraft::BasicNode;
-use openraft::EffectiveMembership;
-use openraft::Entry;
-use openraft::EntryPayload;
-use openraft::ErrorSubject;
-use openraft::ErrorVerb;
-use openraft::LogId;
-use openraft::RaftLogReader;
-use openraft::RaftSnapshotBuilder;
-use openraft::RaftStorage;
-use openraft::SnapshotMeta;
-use openraft::StorageError;
-use openraft::StorageIOError;
-use openraft::Vote;
-use serde::Deserialize;
-use serde::Serialize;
+use openraft::storage::{LogState, Snapshot};
+use openraft::{
+    AnyError, BasicNode, EffectiveMembership, Entry, EntryPayload, ErrorSubject, ErrorVerb, LogId,
+    RaftLogReader, RaftSnapshotBuilder, RaftStorage, SnapshotMeta, StorageError, StorageIOError,
+    Vote,
+};
+use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 
-use crate::node::ExampleNodeId;
-use crate::node::ExampleTypeConfig;
+use crate::node::{ExampleNodeId, ExampleTypeConfig};
 
 /**
  * Here you will set the types of request that will interact with the raft nodes.

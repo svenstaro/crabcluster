@@ -2,14 +2,10 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::Result;
-use openraft::BasicNode;
-use openraft::Config;
-use openraft::Raft;
+use openraft::{BasicNode, Config, Raft};
 
 use crate::raft_network::ExampleNetwork;
-use crate::store::ExampleRequest;
-use crate::store::ExampleResponse;
-use crate::store::ExampleStore;
+use crate::store::{ExampleRequest, ExampleResponse, ExampleStore};
 
 pub type ExampleNodeId = u64;
 
