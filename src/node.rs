@@ -1,3 +1,4 @@
+use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::Result;
@@ -29,7 +30,7 @@ pub struct ExampleApp {
     pub config: Arc<Config>,
 }
 
-pub async fn start_node(node_id: u64) -> Result<()> {
+pub async fn start_node(node_id: u64, bind_addr: SocketAddr) -> Result<()> {
     // Create a configuration for the raft instance.
     let config = Arc::new(Config::default().validate().unwrap());
 
