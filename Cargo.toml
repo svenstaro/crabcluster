@@ -4,8 +4,26 @@ description = " A simple integrated container orchestration solution"
 repository = "https://github.com/svenstaro/crabcluster"
 readme = "README.md"
 license = "MIT"
+keywords = ["cluster", "orchestration", "container"]
+categories = ["command-line-utilities", "network-programming"]
 version = "0.1.0"
 edition = "2021"
 resolver = "2"
 
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+
 [dependencies]
+anyhow = "1"
+# clap = { version = "4", features = ["derive", "cargo", "wrap_help", "deprecated"] }
+# clap_complete = "4"
+# clap_mangen = "0.2"
+# reqwest = { version = "0.11.9", features = ["json"] }
+# serde = { version = "1.0.114", features = ["derive"] }
+# serde_json = "1.0.57"
+tokio = { version = "1.0", default-features = false, features = ["macros", "rt-multi-thread"] }
+# tracing = "0.1.29"
+# tracing-futures = "0.2.4"
+# tracing-subscriber = { version = "0.3.0", features = ["env-filter"] }
