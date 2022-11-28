@@ -1,0 +1,11 @@
+[package]
+name = "crabcluster"
+description = " A simple integrated container orchestration solution"
+repository = "https://github.com/svenstaro/crabcluster"
+readme = "README.md"
+license = "MIT"
+version = "0.1.0"
+edition = "2021"
+resolver = "2"
+
+[dependencies]
