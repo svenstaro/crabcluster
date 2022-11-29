@@ -7,6 +7,7 @@ use uuid::Uuid;
 
 use crate::args::Args;
 
+mod api;
 mod args;
 mod node;
 mod raft_network;

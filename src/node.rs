@@ -1,16 +1,14 @@
-use axum::extract::State;
-use axum::response::IntoResponse;
-use std::collections::BTreeMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::Result;
-use axum::{http::StatusCode, routing::get, Json, Router};
+use axum::{routing::{get, post}, Router};
 use openraft::{BasicNode, Config, Raft};
 use uuid::Uuid;
 
-use crate::raft_network::RaftNetworkConfig;
+use crate::{raft_network::RaftNetworkConfig, api::raft::append};
 use crate::store::{RaftRequest, RaftResponse, RaftStore};
+use crate::api::management::init;
 
 pub type NodeId = Uuid;
 
@@ -55,7 +53,8 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
         config,
     };
     let app = Router::new()
-        .route("/init", get(handler))
+        .route("/init", get(init))
+        .route("/raft-append", post(append))
         .with_state(app_state);
     axum::Server::bind(&bind_addr)
         .serve(app.into_make_service())
@@ -63,20 +62,4 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
         .unwrap();
 
     Ok(())
-}
-
-async fn handler(State(app_state): State<RaftApp>) -> impl IntoResponse {
-    // insert your application logic here
-
-    let mut nodes = BTreeMap::new();
-    nodes.insert(
-        app_state.id,
-        BasicNode {
-            addr: app_state.bind_addr.to_string(),
-        },
-    );
-    let _res = app_state.raft.initialize(nodes).await;
-
-    let temp = serde_json::json!({"a":2});
-    (StatusCode::CREATED, Json(temp))
 }

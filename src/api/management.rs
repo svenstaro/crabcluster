@@ -1,14 +1,20 @@
-//use axum::{
-//    http::StatusCode,
-//    response::IntoResponse,
-//}
-//
-//pub async fn init(app: Data<ExampleApp>) ->  impl IntoResponse {
-//    let mut nodes = BTreeMap::new();
-//    nodes.insert(app.id, BasicNode { addr: app.addr.clone() });
-//    let res = app.raft.initialize(nodes).await;
-//
-//    // this will be converted into a JSON response
-//    // with a status code of `201 Created`
-//    (StatusCode::CREATED, Json(res))
-//}
+use axum::Json;
+use openraft::BasicNode;
+use std::collections::BTreeMap;
+use axum::response::IntoResponse;
+use axum::http::StatusCode;
+use crate::node::RaftApp;
+use axum::extract::State;
+
+pub async fn init(State(app_state): State<RaftApp>) -> impl IntoResponse {
+    // insert your application logic here
+    let mut nodes = BTreeMap::new();
+    nodes.insert(
+        app_state.id,
+        BasicNode {
+            addr: app_state.bind_addr.to_string(),
+        },
+    );
+    let res = app_state.raft.initialize(nodes).await;
+    (StatusCode::CREATED, Json(res))
+}
