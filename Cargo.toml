@@ -18,7 +18,7 @@ strip = true
 [dependencies]
 anyhow = "1"
 async-trait = "0.1.58"
-axum = { version = "0.6", default-features = false, features = ["http2", "tokio"] }
+axum = { version = "0.6", default-features = false, features = ["http2", "tokio", "json"] }
 openraft = { git = "https://github.com/datafuselabs/openraft", features = ["serde"] }
 reqwest = { version = "0.11.13", default-features = false, features = ["rustls", "json"] }
 clap = { version = "4", features = ["derive", "cargo", "wrap_help", "deprecated"] }
