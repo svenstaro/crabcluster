@@ -6,8 +6,5 @@ use clap::Parser;
 #[command(name = "crabcluster", author, version, about)]
 pub struct Args {
     #[arg(long)]
-    pub id: u64,
-
-    #[arg(long)]
     pub bind_addr: SocketAddr,
 }

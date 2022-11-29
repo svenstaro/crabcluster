@@ -3,6 +3,7 @@ use clap::Parser;
 use node::start_node;
 use tracing_subscriber::{filter::LevelFilter, prelude::*, EnvFilter, Registry};
 use tracing_tree::HierarchicalLayer;
+use uuid::Uuid;
 
 use crate::args::Args;
 
@@ -31,5 +32,9 @@ async fn main() -> Result<()> {
     tracing::subscriber::set_global_default(subscriber).unwrap();
 
     let args = Args::parse();
-    start_node(args.id, args.bind_addr).await
+
+    // TODO: Eventually store and restore this generated ID from disk.
+    let node_id = Uuid::new_v4();
+
+    start_node(node_id, args.bind_addr).await
 }

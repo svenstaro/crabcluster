@@ -3,39 +3,40 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use openraft::{BasicNode, Config, Raft};
+use uuid::Uuid;
 
-use crate::raft_network::ExampleNetwork;
-use crate::store::{ExampleRequest, ExampleResponse, ExampleStore};
+use crate::raft_network::RaftNetworkConfig;
+use crate::store::{RaftRequest, RaftResponse, RaftStore};
 
-pub type ExampleNodeId = u64;
+pub type NodeId = Uuid;
 
 openraft::declare_raft_types!(
-    /// Declare the type configuration for example K/V store.
-    pub ExampleTypeConfig: D = ExampleRequest, R = ExampleResponse, NodeId = ExampleNodeId, Node = BasicNode
+    /// Declare the type configuration for K/V store.
+    pub RaftTypeConfig: D = RaftRequest, R = RaftResponse, NodeId = NodeId, Node = BasicNode
 );
 
-pub type ExampleRaft = Raft<ExampleTypeConfig, ExampleNetwork, Arc<ExampleStore>>;
+pub type RaftConfig = Raft<RaftTypeConfig, RaftNetworkConfig, Arc<RaftStore>>;
 
 // Representation of an application state. This struct can be shared around to share
 // instances of raft, store and more.
-pub struct ExampleApp {
-    pub id: ExampleNodeId,
+pub struct RaftApp {
+    pub id: NodeId,
     pub addr: String,
-    pub raft: ExampleRaft,
-    pub store: Arc<ExampleStore>,
+    pub raft: RaftConfig,
+    pub store: Arc<RaftStore>,
     pub config: Arc<Config>,
 }
 
-pub async fn start_node(node_id: u64, bind_addr: SocketAddr) -> Result<()> {
+pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
     // Create a configuration for the raft instance.
     let config = Arc::new(Config::default().validate().unwrap());
 
     // Create a instance of where the Raft data will be stored.
-    let store = Arc::new(ExampleStore::default());
+    let store = Arc::new(RaftStore::default());
 
     // Create the network layer that will connect and communicate the raft instances and
     // will be used in conjunction with the store created above.
-    let network = ExampleNetwork {};
+    let network = RaftNetworkConfig {};
 
     // Create a local raft instance.
     let raft = Raft::new(node_id, config.clone(), network, store.clone());
