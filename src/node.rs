@@ -1,7 +1,11 @@
+use axum::extract::State;
+use axum::response::IntoResponse;
+use std::collections::BTreeMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::Result;
+use axum::{http::StatusCode, routing::get, Json, Router};
 use openraft::{BasicNode, Config, Raft};
 use uuid::Uuid;
 
@@ -19,9 +23,10 @@ pub type RaftConfig = Raft<RaftTypeConfig, RaftNetworkConfig, Arc<RaftStore>>;
 
 // Representation of an application state. This struct can be shared around to share
 // instances of raft, store and more.
+#[derive(Clone)]
 pub struct RaftApp {
     pub id: NodeId,
-    pub addr: String,
+    pub bind_addr: SocketAddr,
     pub raft: RaftConfig,
     pub store: Arc<RaftStore>,
     pub config: Arc<Config>,
@@ -41,15 +46,37 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
     // Create a local raft instance.
     let raft = Raft::new(node_id, config.clone(), network, store.clone());
 
-    // Create an application that will store all the instances created above, this will
-    // be later used on the actix-web services.
-    // let app = Data::new(ExampleApp {
-    //     id: node_id,
-    //     addr: http_addr.clone(),
-    //     raft,
-    //     store,
-    //     config,
-    // });
+    // Create an application that will store all the instances created above
+    let app_state = RaftApp {
+        id: node_id,
+        bind_addr,
+        raft,
+        store,
+        config,
+    };
+    let app = Router::new()
+        .route("/init", get(handler))
+        .with_state(app_state);
+    axum::Server::bind(&bind_addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 
     Ok(())
+}
+
+async fn handler(State(app_state): State<RaftApp>) -> impl IntoResponse {
+    // insert your application logic here
+
+    let mut nodes = BTreeMap::new();
+    nodes.insert(
+        app_state.id,
+        BasicNode {
+            addr: app_state.bind_addr.to_string(),
+        },
+    );
+    let _res = app_state.raft.initialize(nodes).await;
+
+    let temp = serde_json::json!({"a":2});
+    (StatusCode::CREATED, Json(temp))
 }
