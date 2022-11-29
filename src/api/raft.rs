@@ -1,7 +1,7 @@
-use crate::node::RaftApp;
-use crate::node::RaftTypeConfig;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use openraft::raft::AppendEntriesRequest;
+
+use crate::node::{RaftApp, RaftTypeConfig};
 
 pub async fn append(
     State(app_state): State<RaftApp>,

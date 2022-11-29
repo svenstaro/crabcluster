@@ -11,9 +11,9 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::node::{NodeId, RaftTypeConfig};
 
-pub struct RaftNetworkConfig {}
+pub struct RaftNetworkClient;
 
-impl RaftNetworkConfig {
+impl RaftNetworkClient {
     pub async fn send_rpc<Req, Resp, Err>(
         &self,
         target: NodeId,
@@ -27,8 +27,7 @@ impl RaftNetworkConfig {
         Resp: DeserializeOwned,
     {
         let addr = &target_node.addr;
-
-        let url = format!("http://{}/{}", addr, uri);
+        let url = format!("http://{addr}/{uri}");
         let client = reqwest::Client::new();
 
         let resp = client
@@ -49,7 +48,7 @@ impl RaftNetworkConfig {
 
 // NOTE: This could be implemented also on `Arc<ExampleNetwork>`, but since it's empty, implemented directly.
 #[async_trait]
-impl RaftNetworkFactory<RaftTypeConfig> for RaftNetworkConfig {
+impl RaftNetworkFactory<RaftTypeConfig> for RaftNetworkClient {
     type Network = RaftNetworkConnection;
     type ConnectionError = NetworkError;
 
@@ -59,7 +58,7 @@ impl RaftNetworkFactory<RaftTypeConfig> for RaftNetworkConfig {
         node: &BasicNode,
     ) -> Result<Self::Network, Self::ConnectionError> {
         Ok(RaftNetworkConnection {
-            owner: RaftNetworkConfig {},
+            owner: RaftNetworkClient {},
             target,
             target_node: node.clone(),
         })
@@ -67,7 +66,7 @@ impl RaftNetworkFactory<RaftTypeConfig> for RaftNetworkConfig {
 }
 
 pub struct RaftNetworkConnection {
-    owner: RaftNetworkConfig,
+    owner: RaftNetworkClient,
     target: NodeId,
     target_node: BasicNode,
 }
