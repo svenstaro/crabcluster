@@ -32,3 +32,4 @@ tracing-futures = "0.2.4"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-tree = "0.2.2"
 uuid = { version = "1.2", features = ["v4", "serde"] }
+sled = { version = "0.34", features = ["compression"] }
