@@ -1,10 +1,9 @@
-use axum::Json;
-use openraft::BasicNode;
 use std::collections::BTreeMap;
-use axum::response::IntoResponse;
-use axum::http::StatusCode;
+
+use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
+use openraft::BasicNode;
+
 use crate::node::RaftApp;
-use axum::extract::State;
 
 pub async fn init(State(app_state): State<RaftApp>) -> impl IntoResponse {
     // insert your application logic here
