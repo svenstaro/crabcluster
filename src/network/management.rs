@@ -1,7 +1,8 @@
-use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
-use openraft::{error::Infallible, BasicNode, RaftMetrics};
 use std::collections::{BTreeMap, BTreeSet};
 use std::net::SocketAddr;
+
+use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
+use openraft::{error::Infallible, BasicNode, RaftMetrics};
 
 use crate::node::{NodeId, RaftApp};
 
