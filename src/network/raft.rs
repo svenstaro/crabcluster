@@ -1,3 +1,5 @@
+//! Module containing Raft-specific operations
+
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use openraft::raft::{AppendEntriesRequest, InstallSnapshotRequest, VoteRequest};
 

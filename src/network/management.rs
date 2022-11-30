@@ -1,3 +1,5 @@
+//! This module contains APIs for cluster management such as joining and leaving nodes.
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::net::SocketAddr;
 
