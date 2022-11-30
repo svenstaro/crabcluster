@@ -1,6 +1,9 @@
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use openraft::raft::AppendEntriesRequest;
+use openraft::raft::InstallSnapshotRequest;
+use openraft::raft::VoteRequest;
 
+use crate::node::NodeId;
 use crate::node::{RaftApp, RaftTypeConfig};
 
 pub async fn append(
@@ -8,5 +11,21 @@ pub async fn append(
     Json(req): Json<AppendEntriesRequest<RaftTypeConfig>>,
 ) -> impl IntoResponse {
     let res = app_state.raft.append_entries(req).await;
+    (StatusCode::CREATED, Json(res))
+}
+
+pub async fn snapshot(
+    State(app_state): State<RaftApp>,
+    Json(req): Json<InstallSnapshotRequest<RaftTypeConfig>>,
+) -> impl IntoResponse {
+    let res = app_state.raft.install_snapshot(req).await;
+    (StatusCode::CREATED, Json(res))
+}
+
+pub async fn vote(
+    State(app_state): State<RaftApp>,
+    Json(req): Json<VoteRequest<NodeId>>,
+) -> impl IntoResponse {
+    let res = app_state.raft.vote(req).await;
     (StatusCode::CREATED, Json(res))
 }

@@ -10,6 +10,8 @@ use openraft::{BasicNode, Config, Raft};
 use uuid::Uuid;
 
 use crate::api::management::init;
+use crate::api::raft::snapshot;
+use crate::api::raft::vote;
 use crate::store::{RaftRequest, RaftResponse, RaftStore};
 use crate::{api::raft::append, raft_network::RaftNetworkClient};
 
@@ -58,6 +60,8 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
     let app = Router::new()
         .route("/init", get(init))
         .route("/raft-append", post(append))
+        .route("/raft-snapshot", post(snapshot))
+        .route("/raft-vote", post(vote))
         .with_state(app_state);
     axum::Server::bind(&bind_addr)
         .serve(app.into_make_service())
