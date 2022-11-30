@@ -9,8 +9,8 @@ use axum::{
 use openraft::{BasicNode, Config, Raft};
 use uuid::Uuid;
 
-use crate::api::management::{init, add_learner, change_membership, get_id, metrics};
-use crate::api::raft::{snapshot, vote, append};
+use crate::network::management::{init, add_learner, change_membership, get_id, metrics};
+use crate::network::raft::{snapshot, vote, append};
 use crate::raft_network::RaftNetworkClient;
 use crate::store::{RaftRequest, RaftResponse, RaftStore};
 
