@@ -9,11 +9,10 @@ use axum::{
 use openraft::{BasicNode, Config, Raft};
 use uuid::Uuid;
 
-use crate::api::management::init;
-use crate::api::raft::snapshot;
-use crate::api::raft::vote;
+use crate::api::management::{init, add_learner, change_membership, get_id, metrics};
+use crate::api::raft::{snapshot, vote, append};
+use crate::raft_network::RaftNetworkClient;
 use crate::store::{RaftRequest, RaftResponse, RaftStore};
-use crate::{api::raft::append, raft_network::RaftNetworkClient};
 
 pub type NodeId = Uuid;
 
@@ -62,6 +61,10 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
         .route("/raft-append", post(append))
         .route("/raft-snapshot", post(snapshot))
         .route("/raft-vote", post(vote))
+        .route("/get-id", get(get_id))
+        .route("/metrics", get(metrics))
+        .route("/add-learner", post(add_learner))
+        .route("/change-membership", post(change_membership))
         .with_state(app_state);
     axum::Server::bind(&bind_addr)
         .serve(app.into_make_service())

@@ -1,10 +1,7 @@
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
-use openraft::raft::AppendEntriesRequest;
-use openraft::raft::InstallSnapshotRequest;
-use openraft::raft::VoteRequest;
+use openraft::raft::{AppendEntriesRequest, InstallSnapshotRequest, VoteRequest};
 
-use crate::node::NodeId;
-use crate::node::{RaftApp, RaftTypeConfig};
+use crate::node::{NodeId, RaftApp, RaftTypeConfig};
 
 pub async fn append(
     State(app_state): State<RaftApp>,
