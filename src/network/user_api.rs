@@ -5,6 +5,7 @@ use openraft::error::Infallible;
 
 use crate::{node::RaftApp, store::RaftRequest};
 
+#[tracing::instrument(level = "debug", skip(app_state, req))]
 pub async fn kv_write(
     State(app_state): State<RaftApp>,
     Json(req): Json<RaftRequest>,
@@ -13,6 +14,7 @@ pub async fn kv_write(
     (StatusCode::OK, Json(res))
 }
 
+#[tracing::instrument(level = "debug", skip(app_state, req))]
 pub async fn kv_read(
     State(app_state): State<RaftApp>,
     Json(req): Json<String>,

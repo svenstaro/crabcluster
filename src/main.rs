@@ -17,7 +17,7 @@ mod store;
 async fn main() -> Result<()> {
     let env_filter = EnvFilter::builder()
         .with_default_directive(LevelFilter::DEBUG.into())
-        .parse("")?;
+        .parse("info,crabcluster=debug,openraft=info,tower_http=debug")?;
 
     let layer = HierarchicalLayer::default()
         .with_writer(std::io::stdout)

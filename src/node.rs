@@ -57,6 +57,7 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
         store,
         config,
     };
+
     let app = Router::new()
         .route("/init", get(init))
         .route("/raft-append", post(append))
@@ -68,7 +69,8 @@ pub async fn start_node(node_id: NodeId, bind_addr: SocketAddr) -> Result<()> {
         .route("/change-membership", post(change_membership))
         .route("/read", post(kv_read))
         .route("/write", post(kv_write))
-        .with_state(app_state);
+        .with_state(app_state)
+        .layer(tower_http::trace::TraceLayer::new_for_http());
     axum::Server::bind(&bind_addr)
         .serve(app.into_make_service())
         .await

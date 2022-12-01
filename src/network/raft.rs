@@ -5,6 +5,7 @@ use openraft::raft::{AppendEntriesRequest, InstallSnapshotRequest, VoteRequest};
 
 use crate::node::{NodeId, RaftApp, RaftTypeConfig};
 
+#[tracing::instrument(level = "trace", skip(app_state))]
 pub async fn append(
     State(app_state): State<RaftApp>,
     Json(req): Json<AppendEntriesRequest<RaftTypeConfig>>,
@@ -13,6 +14,7 @@ pub async fn append(
     (StatusCode::CREATED, Json(res))
 }
 
+#[tracing::instrument(level = "trace", skip(app_state))]
 pub async fn snapshot(
     State(app_state): State<RaftApp>,
     Json(req): Json<InstallSnapshotRequest<RaftTypeConfig>>,
@@ -21,6 +23,7 @@ pub async fn snapshot(
     (StatusCode::CREATED, Json(res))
 }
 
+#[tracing::instrument(level = "trace", skip(app_state))]
 pub async fn vote(
     State(app_state): State<RaftApp>,
     Json(req): Json<VoteRequest<NodeId>>,

@@ -8,6 +8,7 @@ use openraft::{error::Infallible, BasicNode, RaftMetrics};
 
 use crate::node::{NodeId, RaftApp};
 
+#[tracing::instrument(level = "debug", skip(app_state))]
 pub async fn init(State(app_state): State<RaftApp>) -> impl IntoResponse {
     let mut nodes = BTreeMap::new();
     nodes.insert(
@@ -20,6 +21,7 @@ pub async fn init(State(app_state): State<RaftApp>) -> impl IntoResponse {
     (StatusCode::CREATED, Json(res))
 }
 
+#[tracing::instrument(level = "debug", skip(app_state))]
 pub async fn add_learner(
     State(app_state): State<RaftApp>,
     Json(req): Json<(NodeId, SocketAddr)>,
@@ -32,6 +34,7 @@ pub async fn add_learner(
     (StatusCode::OK, Json(res))
 }
 
+#[tracing::instrument(level = "debug", skip(app_state))]
 pub async fn change_membership(
     State(app_state): State<RaftApp>,
     Json(req): Json<BTreeSet<NodeId>>,
@@ -40,6 +43,7 @@ pub async fn change_membership(
     (StatusCode::OK, Json(res))
 }
 
+#[tracing::instrument(level = "debug", skip(app_state))]
 pub async fn metrics(State(app_state): State<RaftApp>) -> impl IntoResponse {
     let metrics = app_state.raft.metrics().borrow().clone();
 
@@ -47,6 +51,7 @@ pub async fn metrics(State(app_state): State<RaftApp>) -> impl IntoResponse {
     (StatusCode::OK, Json(res))
 }
 
+#[tracing::instrument(level = "debug", skip(app_state))]
 pub async fn get_id(State(app_state): State<RaftApp>) -> impl IntoResponse {
     (StatusCode::CREATED, Json(app_state.id))
 }
