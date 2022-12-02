@@ -37,16 +37,20 @@ async fn main() -> Result<()> {
     // TODO: Eventually store and restore this generated ID from disk.
     let node_id = Uuid::new_v4();
 
-    // Use the default podman socket for this user.
-    let podman_socket_path = directories::BaseDirs::new()
-        .expect("Didn't find base dirs")
-        .runtime_dir()
-        .expect("No runtime dir found")
-        .join("podman/podman.sock");
+    // Use a unix socket on linux and default to tcp otherwise.
+    let podman = if cfg!(target_os = "linux") {
+        // Use the default podman socket for this user.
+        let socket_dir = directories::BaseDirs::new()
+            .expect("Didn't find base dirs")
+            .runtime_dir()
+            .expect("No runtime dir found")
+            .join("podman/podman.sock");
+        podman_api::Podman::unix(socket_dir)
+    } else {
+        podman_api::Podman::tcp("tcp://localhost:8888")?
+    };
 
-    dbg!(&podman_socket_path);
-    let podman = podman_api::Podman::unix(podman_socket_path);
-    dbg!(podman.info().await?);
+    dbg!(podman.ping().await?);
 
     start_node(node_id, args.bind_addr).await
 }
